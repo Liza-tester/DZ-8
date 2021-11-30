@@ -11,7 +11,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
 
-@DisplayName("Рассчет чисел имени ОНЛАЙН")
+@DisplayName("Рассчет чисел имени онлайн")
 public class NameNumberTest {
 
     @BeforeAll
@@ -45,30 +45,19 @@ public class NameNumberTest {
         $$("#res_div span").get(1).shouldHave(Condition.text(middleNameNumber));
         $$("#res_div span").get(2).shouldHave(Condition.text(lastNameNumber));
     }
-    @CsvSource({
-            "Анна, Петровна, Ясенева, 5, 6, 1",
-            "Ин, Ко-За, Ко-За, 7, 2, 2",
-            "тОМАРА, эЛЕОНОРОВНА, вАСИЛЕНКО, 7, 6, 7",
-            "Жина Изуми, Ая Аризу, Банко Джун, 8, 3, 5",
-            "John, Albert, Brown, 0, 0, 0",
-            "ИгнатW, АртемовичQ, ПушковF, 5, 5, 5",
-            "123, 709, 000, 0, 0, 0",
-            "*!@#$%^&(){}[], *!@#$%^&(){}[], *!@#$%^&(){}[], 0, 0, 0"
-    })
-    @ValueSource(strings = {"Анна", ""})
-    @ParameterizedTest(name = "Вычисление чисел ФИО: {0} {1} {2}, результат: {3} {4} {5}")
+
+    @ValueSource(strings = {"Ясенева", "0"})
+    @ParameterizedTest(name = "Отображение числа фамилии: {0}")
     @Tag("major")
 
-    public void countNameNumberTest(String firstName, String middleName, String lastName,
-                                    String firstNameNumber, String middleNameNumber, String lastNameNumber){
+    public void countNameNumberTest(String lastName){
 
-        $("#name").setValue(firstName);
-        $("#otc").setValue(middleName);
         $("#fam").setValue(lastName);
         $(byText("ПОСЧИТАТЬ")).click();
 
-        $$("#res_div span").get(0).shouldHave(Condition.text(firstNameNumber));
-        $$("#res_div span").get(1).shouldHave(Condition.text(middleNameNumber));
-        $$("#res_div span").get(2).shouldHave(Condition.text(lastNameNumber));
+        $$("#res_div span").get(0).shouldBe(Condition.visible);
+        $("#res_div p").shouldHave(Condition.text("Число фамилии:"));
+        $$("#res_div span").get(1).shouldNotBe(Condition.visible);
+        $$("#res_div span").get(2).shouldNotBe(Condition.visible);
     }
 }
